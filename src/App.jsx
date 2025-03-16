@@ -1,9 +1,19 @@
 import React from 'react';
-import './App.css';
+import './all.css';
+import Navbar from "./navbar";
+import Sidebar from "./sidebar";
+import Dashboard from './dashboard';
+import SportsDash from './sports'
+import Footer from './footer';
 const App = () => {
   return (
     <div>
-      <h1 className="text-4xl text-center text-red-500">Hello, Tailwind CSS!</h1>
+      <Navbar />
+      {/* <h1 className="text-center text-2xl font-bold mt-5">Welcome to Fortune Bet</h1> */}
+      {/* <Sidebar /> */}
+      <Dashboard />
+      <SportsDash />
+      <Footer/>
     </div>
   );
 };
