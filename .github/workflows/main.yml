@@ -31,7 +31,6 @@ jobs:
     name: Build & Test
     needs: merge-to-main
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout repo
@@ -51,16 +50,6 @@ jobs:
       - name: Run Linter
         run: npm run lint
 
-      - name: Debug build environment
-        run: |
-          echo "Node version: $(node -v)"
-          echo "NPM version: $(npm -v)"
-          echo "Current directory: $(pwd)"
-          echo "Available disk space:"
-          df -h
-          echo "Listing files:"
-          ls -la
-
       - name: Build project
         run: npm run build
 
@@ -74,9 +63,11 @@ jobs:
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
 
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
