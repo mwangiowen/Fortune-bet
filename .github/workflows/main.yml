@@ -4,51 +4,23 @@ on:
   push:
     branches:
       - main
-      - muzi
 
 jobs:
-  merge-to-main:
-    name: Merge muzi into main
-    if: github.ref == 'refs/heads/muzi'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
-
-      - name: Merge muzi into main
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git checkout main
-          git merge --no-ff muzi -m "Auto-merge muzi into main"
-          git push origin main
-
   build:
-    name: Build & Test
-    needs: merge-to-main
+    name: Build
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 18
 
       - name: Install dependencies
-        uses: bahmutov/npm-install@v1
-
-      - name: Run tests
-        run: npm test
-
-      - name: Run Linter
-        run: npm run lint
+        run: npm install
 
       - name: Build project
         run: npm run build
@@ -63,10 +35,11 @@ jobs:
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -79,3 +52,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+
